@@ -5,16 +5,19 @@ public class GameObject {
 	int y;
 	int width;
 	int height;
+	
+	boolean isAlive;
 
 	GameObject() {
 
+		isAlive = true;
 	}
-	
-	void update(){
-		 x += 1;
-		 y += 1;
+
+	void update() {
+
 	}
-	void draw(Graphics g){
-		g.fillRect(x, y, 100, 100);
+
+	void draw(Graphics g) {
+
 	}
 }

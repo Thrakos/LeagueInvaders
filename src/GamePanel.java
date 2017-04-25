@@ -18,16 +18,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int END_STATE = 2;
 
 	int currentState = MENU_STATE;
-	
+
 	Font titleFont;
-	
+
 	Font thatOtherFont;
+
+	Rocketship ship;
+	
+	ObjectManager OM;
 
 	GamePanel() {
 		timer = new Timer(1000 / 60, this);
-		
+
 		titleFont = new Font("Arial", Font.PLAIN, 48);
 		thatOtherFont = new Font("Arial", Font.PLAIN, 25);
+
+		ship = new Rocketship(250, 700, 50, 50);
+		
+		OM = new ObjectManager();
+		
+		OM.addObject(ship);
 
 	}
 
@@ -65,19 +75,43 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		System.out.println("You pressed a key. Yaaaaaaayyyyyy.");
-		if(e.getKeyCode()==KeyEvent.VK_ENTER){
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState += 1;
 		}
-		if(currentState > END_STATE){
+		if (currentState > END_STATE) {
 			currentState = MENU_STATE;
 		}
-
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			ship.left = true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			ship.right = true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_UP){
+			ship.up = true;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			ship.down = true;
+		}
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		System.out.println("You released a key. Impressive.");
+		
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			ship.left = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			ship.right = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_UP){
+			ship.up = false;
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			ship.down = false;
+		}
 
 	}
 
@@ -87,6 +121,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	void updateGameState() {
 
+		OM.update();
 	}
 
 	void updateEndState() {
@@ -96,7 +131,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawMenuState(Graphics g) {
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.LENGTH);
-		
+
 		g.setColor(Color.YELLOW);
 		g.setFont(titleFont);
 		g.drawString("LEAGUE INVADERS", 20, 200);
@@ -108,6 +143,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.LENGTH);
+		OM.draw(g);
 	}
 
 	void drawEndState(Graphics g) {

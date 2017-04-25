@@ -6,13 +6,13 @@ public class LeagueInvaders {
 
 	static final int WIDTH = 500;
 	static final int LENGTH = 800;
-	
+
 	GamePanel GP;
 
 	LeagueInvaders() {
 
 		frame = new JFrame();
-		
+
 		GP = new GamePanel();
 
 		setup();
@@ -28,7 +28,7 @@ public class LeagueInvaders {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.addKeyListener(GP);
-		
+
 		GP.startGame();
 	}
 }
