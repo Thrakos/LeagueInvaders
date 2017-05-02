@@ -1,11 +1,15 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -24,8 +28,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font thatOtherFont;
 
 	Rocketship ship;
-	
+
 	ObjectManager OM;
+	
+	public static BufferedImage alienImg;
+	public static BufferedImage rocketImg;
+	public static BufferedImage bulletImg;
 
 	GamePanel() {
 		timer = new Timer(1000 / 60, this);
@@ -34,10 +42,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		thatOtherFont = new Font("Arial", Font.PLAIN, 25);
 
 		ship = new Rocketship(250, 700, 50, 50);
-		
+
 		OM = new ObjectManager();
+
+		OM.addObject(ship);	
 		
-		OM.addObject(ship);
+		try {
+			alienImg = ImageIO.read(this.getClass().getResourceAsStream("alien.png"));
+			rocketImg = ImageIO.read(this.getClass().getResourceAsStream("rocket.png"));
+			bulletImg = ImageIO.read(this.getClass().getResourceAsStream("bullet.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -69,28 +86,27 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		System.out.println("You typed a key. Congratulations.");
+		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println("You pressed a key. Yaaaaaaayyyyyy.");
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState += 1;
 		}
 		if (currentState > END_STATE) {
 			currentState = MENU_STATE;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			ship.left = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			ship.right = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_UP){
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			ship.up = true;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			ship.down = true;
 		}
 
@@ -98,19 +114,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println("You released a key. Impressive.");
-		
-		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			ship.left = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			ship.right = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_UP){
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			ship.up = false;
 		}
-		if(e.getKeyCode() == KeyEvent.VK_DOWN){
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			ship.down = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			OM.addObject(new Projectile(ship.x + 23, ship.y, 10, 10));
 		}
 
 	}
@@ -122,6 +140,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 
 		OM.update();
+		OM.manageEnemies();
+		OM.checkCollision();
+		
+		if (ship.isAlive == false) {
+			currentState = END_STATE;
+			OM.reset();
+			ship = new Rocketship(250, 700, 50, 50);
+			OM.addObject(ship);
+			OM.setScore(0);
+		}
 	}
 
 	void updateEndState() {

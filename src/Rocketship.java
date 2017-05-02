@@ -11,6 +11,7 @@ public class Rocketship extends GameObject {
 	boolean right;
 
 	Rocketship(int x, int y, int width, int height) {
+		super();
 
 		this.x = x;
 		this.y = y;
@@ -27,6 +28,7 @@ public class Rocketship extends GameObject {
 	}
 
 	void update() {
+		super.update();
 
 		if(up){
 			y -= speed;
@@ -43,7 +45,6 @@ public class Rocketship extends GameObject {
 	}
 
 	void draw(Graphics g) {
-		g.setColor(Color.BLUE);
-		g.fillRect(x, y, width, height);
+		g.drawImage(GamePanel.rocketImg, x, y, width, height, null);
 	}
 }
