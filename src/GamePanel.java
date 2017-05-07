@@ -86,7 +86,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 	}
 
 	@Override
@@ -109,6 +109,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			ship.down = true;
 		}
+		if (e.getKeyCode() == KeyEvent.VK_S){
+			OM.score += 5;
+		}
+
 
 	}
 
@@ -131,10 +135,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			OM.addObject(new Projectile(ship.x + 23, ship.y, 10, 10));
 		}
 
+
 	}
 
 	void updateMenuState() {
-
+		OM.setScore(0);
 	}
 
 	void updateGameState() {
@@ -148,7 +153,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			OM.reset();
 			ship = new Rocketship(250, 700, 50, 50);
 			OM.addObject(ship);
-			OM.setScore(0);
 		}
 	}
 
@@ -177,5 +181,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawEndState(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.LENGTH);
+		g.setColor(Color.BLACK);
+		g.setFont(titleFont);
+		g.drawString("GAME OVER", 100, 300);
+		g.drawString("Your score is: " + OM.score, 60, 400);
 	}
 }
